@@ -16,7 +16,9 @@ if v:version < 700 || exists('loaded_setcolors') || &cp
 endif
 
 let loaded_setcolors = 1
-let s:mycolors = ['slate', 'torte', 'darkblue', 'delek', 'murphy', 'elflord', 'pablo', 'koehler']  " colorscheme names that we use to set color
+let s:dark_colors = ['nightwish', 'darkblue', 'oceanblack', 'asu1dark', 'oceanblack', 'fnaqevan', 'torte', 'transparent', 'wintersday', 'murphy', 'wintersday', 'dusk', 'midnight2', 'neon']
+let s:light_colors = ['nuvola', 'desert', 'jhlight', 'vc', 'biogoo', 'lingodirector']
+let s:mycolors = s:dark_colors
 
 " Set list of color scheme names that we will use, except
 " argument 'now' actually changes the current color scheme.
@@ -32,12 +34,12 @@ function! s:SetColors(args)
     let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
     let s:mycolors = map(paths, 'fnamemodify(v:val, ":t:r")')
     echo 'List of colors set from all installed color schemes'
-  elseif a:args == 'my'
-    let c1 = 'default elflord peachpuff desert256 breeze morning'
-    let c2 = 'darkblue gothic aqua earth black_angus relaxedgreen'
-    let c3 = 'darkblack freya motus impact less chocolateliquor'
-    let s:mycolors = split(c1.' '.c2.' '.c3)
-    echo 'List of colors set from built-in names'
+  elseif a:args == 'light'
+    let s:mycolors = s:light_colors
+    echo 'List of colors set from light bg schemes'
+  elseif a:args == 'dark'
+    let s:mycolors = s:dark_colors
+    echo 'List of colors set from light bg schemes'
   elseif a:args == 'now'
     call s:HourColor()
   else
