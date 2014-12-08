@@ -16,9 +16,19 @@ if v:version < 700 || exists('loaded_setcolors') || &cp
 endif
 
 let loaded_setcolors = 1
-let s:dark_colors = ['nightwish', 'darkblue', 'oceanblack', 'asu1dark', 'oceanblack', 'fnaqevan', 'torte', 'transparent', 'wintersday', 'murphy', 'wintersday', 'dusk', 'midnight2', 'neon']
-let s:light_colors = ['nuvola', 'desert', 'jhlight', 'vc', 'biogoo', 'lingodirector']
+let s:dark_colors = ['nightwish', 'darkblue', 'oceanblack', 'asu1dark', 'fnaqevan', 'torte', 'transparent', 'wintersday', 'murphy', 'wintersday', 'dusk', 'midnight2', 'neon', 'desert', 'darkblack', 'denim']
+let s:light_colors = ['nuvola', 'jhlight', 'vc', 'biogoo', 'lingodirector', 'zellner', 'default', 'dawn', 'autumn', 'peachpuff']
 let s:mycolors = s:dark_colors
+
+function! s:uniquify()
+  let s:uniq = []
+  for ic in s:mycolors
+     if index(s:uniq, ic) == -1
+        let s:uniq += [ic]
+     endif
+  endfor
+  let s:mycolors = s:uniq
+endfunction
 
 " Set list of color scheme names that we will use, except
 " argument 'now' actually changes the current color scheme.
@@ -39,15 +49,17 @@ function! s:SetColors(args)
     echo 'List of colors set from light bg schemes'
   elseif a:args == 'dark'
     let s:mycolors = s:dark_colors
-    echo 'List of colors set from light bg schemes'
+    echo 'List of colors set from dark bg schemes'
   elseif a:args == 'now'
     call s:HourColor()
   else
     let s:mycolors = split(a:args)
     echo 'List of colors set from argument (space-separated names)'
   endif
+  call s:uniquify()
 endfunction
 
+call s:uniquify() " in case we by mistake have a duplicate in pre-defined list 
 command! -nargs=* SetColors call s:SetColors('<args>')
 
 " Set next/previous/random (how = 1/-1/0) color from our list of colors.
@@ -82,6 +94,7 @@ function! s:NextColor(how, echo_color)
     endif
     try
       execute 'colorscheme '.s:mycolors[current]
+      set background&
       break
     catch /E185:/
       call add(missing, s:mycolors[current])
