@@ -19,6 +19,7 @@ let loaded_setcolors = 1
 let s:dark_colors = ['nightwish', 'darkblue', 'oceanblack', 'asu1dark', 'fnaqevan', 'torte', 'transparent', 'wintersday', 'murphy', 'wintersday', 'dusk', 'midnight2', 'neon', 'desert', 'darkblack', 'denim']
 let s:light_colors = ['nuvola', 'jhlight', 'vc', 'biogoo', 'lingodirector', 'zellner', 'default', 'dawn', 'autumn', 'peachpuff']
 let s:mycolors = s:dark_colors
+let s:last_args = 'dark'
 
 function! s:uniquify()
   let s:uniq = []
@@ -28,6 +29,17 @@ function! s:uniquify()
      endif
   endfor
   let s:mycolors = s:uniq
+endfunction
+
+function! SetColorFlipLight()
+   let new = 'dark'
+   if exists('s:last_args')
+      if (s:last_args == 'dark')
+         let new = 'light'
+      endif
+   endif
+   call s:SetColors(new)
+   call s:NextColor(1, 1)
 endfunction
 
 " Set list of color scheme names that we will use, except
@@ -56,6 +68,7 @@ function! s:SetColors(args)
     let s:mycolors = split(a:args)
     echo 'List of colors set from argument (space-separated names)'
   endif
+  let s:last_args = a:args
   call s:uniquify()
 endfunction
 
@@ -112,6 +125,7 @@ endfunction
 nnoremap <F8> :call NextColor(1)<CR>
 nnoremap <S-F8> :call NextColor(-1)<CR>
 nnoremap <A-F8> :call NextColor(0)<CR>
+nnoremap <C-F8> :call SetColorFlipLight()<CR>
 
 " Set color scheme according to current time of day.
 function! s:HourColor()
